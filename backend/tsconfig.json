@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@auth/*": ["src/auth/*"],
+      "@users/*": ["src/users/*"],
+      "@projects/*": ["src/projects/*"],
+      "@files/*": ["src/files/*"],
+      "@parsing/*": ["src/parsing/*"],
+      "@ai-providers/*": ["src/ai-providers/*"],
+      "@reviews/*": ["src/reviews/*"],
+      "@chat/*": ["src/chat/*"],
+      "@common/*": ["src/common/*"]
+    }
+  }
+}

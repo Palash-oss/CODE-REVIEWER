@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# build output
+dist/
+backend/dist/
+frontend/.next/
+
+# env files — never commit secrets
+.env
+.env.local
+*.env
+!.env.example
+
+# uploaded code (user-submitted ZIPs/repos)
+backend/uploads/
+backend/tmp-extract/
+
+# logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
