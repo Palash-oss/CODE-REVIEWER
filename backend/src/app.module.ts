@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfig } from './config/database.config';
 import { HealthController } from './health/health.controller';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { UsersModule } from './users/users.module';
       useFactory: getDatabaseConfig,
     }),
      UsersModule,
+      AuthModule,
+    ProjectsModule,
   ],
   controllers: [HealthController],
 })
