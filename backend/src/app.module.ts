@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { ProjectsModule } from './projects/projects.module';
 import { FilesModule } from './files/files.module';
 import { ParsingModule } from './parsing/parsing.module';
+import { AiProvidersModule } from './ai-providers/ai-providers.module';
+
 
 
 @Module({
@@ -23,6 +25,7 @@ import { ParsingModule } from './parsing/parsing.module';
     ProjectsModule,
      FilesModule,
       ParsingModule,
+      AiProvidersModule,
   ],
   controllers: [HealthController],
 })
