@@ -9,8 +9,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { FilesModule } from './files/files.module';
 import { ParsingModule } from './parsing/parsing.module';
 import { AiProvidersModule } from './ai-providers/ai-providers.module';
-
-
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -20,12 +19,13 @@ import { AiProvidersModule } from './ai-providers/ai-providers.module';
       inject: [ConfigService],
       useFactory: getDatabaseConfig,
     }),
-     UsersModule,
-      AuthModule,
+    UsersModule,
+    AuthModule,
     ProjectsModule,
-     FilesModule,
-      ParsingModule,
-      AiProvidersModule,
+    FilesModule,
+    ParsingModule,
+    AiProvidersModule,
+    ReviewsModule,
   ],
   controllers: [HealthController],
 })
