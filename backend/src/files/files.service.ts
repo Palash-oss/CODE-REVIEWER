@@ -33,4 +33,8 @@ export class FilesService {
   getFileContent(fileId: string) {
     return this.filesRepo.findOne({ where: { id: fileId } });
   }
+
+  getAllForProject(projectId: string) {
+    return this.filesRepo.find({ where: { projectId } });
+  }
 }

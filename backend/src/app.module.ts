@@ -10,6 +10,7 @@ import { FilesModule } from './files/files.module';
 import { ParsingModule } from './parsing/parsing.module';
 import { AiProvidersModule } from './ai-providers/ai-providers.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     ParsingModule,
     AiProvidersModule,
     ReviewsModule,
+    ChatModule,
   ],
   controllers: [HealthController],
 })
