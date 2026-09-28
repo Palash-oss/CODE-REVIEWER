@@ -31,7 +31,7 @@ export interface FileEntity {
   projectId: string;
 }
 
-export type ProviderType = 'openai' | 'lm-studio' | 'ollama' | 'generic';
+export type ProviderType = 'openai' | 'lm-studio' | 'ollama' | 'gemini' | 'generic';
 
 export interface AiProviderConfig {
   id?: string;

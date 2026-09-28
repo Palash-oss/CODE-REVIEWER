@@ -145,6 +145,13 @@ class ApiClient {
     });
   }
 
+  async importRepo(projectId: string, repoUrl: string): Promise<FileEntity[]> {
+    return this.request<FileEntity[]>(`/projects/${projectId}/files/import-repo`, {
+      method: 'POST',
+      body: JSON.stringify({ repoUrl }),
+    });
+  }
+
   async getFileTree(projectId: string): Promise<TreeNode[]> {
     return this.request<TreeNode[]>(`/projects/${projectId}/files/tree`, {
       method: 'GET',

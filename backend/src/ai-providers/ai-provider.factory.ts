@@ -14,6 +14,7 @@ export class AiProviderFactory {
       case 'openai':
       case 'lm-studio':
       case 'ollama':
+      case 'gemini':
       case 'generic':
       default:
         return this.genericProvider;

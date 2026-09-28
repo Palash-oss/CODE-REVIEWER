@@ -53,8 +53,9 @@ export default function WorkspacePage({ params }: WorkspaceProps) {
   const [activeReview, setActiveReview] = useState<Review | null>(null);
   const [isReviewRunning, setIsReviewRunning] = useState(false);
 
-  // Uploading state
+  // Uploading & Importing state
   const [isUploading, setIsUploading] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -156,6 +157,26 @@ export default function WorkspacePage({ params }: WorkspaceProps) {
       alert(`Upload failed: ${err?.message || 'Invalid ZIP format'}`);
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleImportRepo = async (repoUrl: string) => {
+    setIsImporting(true);
+    try {
+      await api.importRepo(projectId, repoUrl);
+      const newTree = await api.getFileTree(projectId);
+      const safeTree = newTree || [];
+      setTree(safeTree);
+      const flattened = extractFlatFiles(safeTree);
+      setFlatFiles(flattened);
+
+      if (flattened.length > 0) {
+        handleSelectFile(flattened[0]);
+      }
+    } catch (err: any) {
+      alert(`Import failed: ${err?.message || 'Could not clone repository'}`);
+    } finally {
+      setIsImporting(false);
     }
   };
 
@@ -269,7 +290,9 @@ export default function WorkspacePage({ params }: WorkspaceProps) {
             selectedPath={selectedFilePath}
             onSelectFile={handleSelectFile}
             onUploadZip={handleUploadZip}
+            onImportRepo={handleImportRepo}
             isUploading={isUploading}
+            isImporting={isImporting}
           />
         </div>
 

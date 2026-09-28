@@ -7,7 +7,7 @@ export class AiProviderConfigEntity {
   id: string;
 
   @Column()
-  providerType: 'openai' | 'lm-studio' | 'ollama' | 'generic';
+  providerType: 'openai' | 'lm-studio' | 'ollama' | 'gemini' | 'generic';
 
   @Column()
   baseUrl: string;
