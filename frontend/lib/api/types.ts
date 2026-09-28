@@ -49,7 +49,12 @@ export interface ReviewIssue {
   severity: SeverityLevel;
 }
 
-export type ReviewTemplate = 'security' | 'performance' | 'code-quality';
+export type ReviewTemplate =
+  | 'security'
+  | 'performance'
+  | 'code-quality'
+  | 'architecture'
+  | 'test-generator';
 
 export interface Review {
   id: string;

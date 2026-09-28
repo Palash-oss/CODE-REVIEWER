@@ -180,13 +180,21 @@ export default function WorkspacePage({ params }: WorkspaceProps) {
     }
   };
 
+  const [reviewError, setReviewError] = useState<string | null>(null);
+
   const handleRunReview = async (fileIds: string[], template: ReviewTemplate) => {
     setIsReviewRunning(true);
+    setReviewError(null);
     try {
       const result = await api.createReview(projectId, { fileIds, templateType: template });
       setActiveReview(result);
     } catch (err: any) {
-      alert(`Review failed: ${err?.message || 'Could not complete analysis'}`);
+      const rawMsg = err?.message || 'Could not complete analysis';
+      const friendlyMsg =
+        rawMsg.includes('Failed to fetch') || rawMsg.includes('NetworkError')
+          ? 'Backend connection interrupted or timed out. Please verify backend is running on http://localhost:3001.'
+          : rawMsg;
+      setReviewError(friendlyMsg);
     } finally {
       setIsReviewRunning(false);
     }
@@ -358,6 +366,8 @@ export default function WorkspacePage({ params }: WorkspaceProps) {
                 isLoading={isReviewRunning}
                 activeReview={activeReview}
                 onSelectIssue={handleSelectIssue}
+                reviewError={reviewError}
+                onClearError={() => setReviewError(null)}
               />
             ) : (
               <ChatTab projectId={projectId} aiConfig={aiConfig} />

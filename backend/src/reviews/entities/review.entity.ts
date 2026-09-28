@@ -7,7 +7,7 @@ export class Review {
   id: string;
 
   @Column()
-  templateType: 'security' | 'performance' | 'code-quality';
+  templateType: 'security' | 'performance' | 'code-quality' | 'architecture' | 'test-generator';
 
   @Column({ type: 'jsonb' })
   targetFiles: string[]; // file IDs reviewed

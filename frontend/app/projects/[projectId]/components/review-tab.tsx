@@ -22,6 +22,9 @@ import {
   Loader2,
   ChevronDown,
   ChevronUp,
+  Network,
+  FlaskConical,
+  X,
 } from 'lucide-react';
 
 interface ReviewTabProps {
@@ -32,6 +35,8 @@ interface ReviewTabProps {
   isLoading: boolean;
   activeReview: Review | null;
   onSelectIssue: (issue: ReviewIssue) => void;
+  reviewError?: string | null;
+  onClearError?: () => void;
 }
 
 export function ReviewTab({
@@ -42,6 +47,8 @@ export function ReviewTab({
   isLoading,
   activeReview,
   onSelectIssue,
+  reviewError,
+  onClearError,
 }: ReviewTabProps) {
   const [template, setTemplate] = useState<ReviewTemplate>('security');
   const [selectedFileIds, setSelectedFileIds] = useState<string[]>([]);
@@ -49,14 +56,26 @@ export function ReviewTab({
 
   React.useEffect(() => {
     if (files.length > 0 && selectedFileIds.length === 0) {
-      setSelectedFileIds(files.map((f) => f.id));
+      const codeFiles = files.filter((f) =>
+        /\.(ts|tsx|js|jsx|py|go|java|c|cpp|rs)$/i.test(f.name),
+      );
+      const initial = (codeFiles.length > 0 ? codeFiles : files).slice(0, 5).map((f) => f.id);
+      setSelectedFileIds(initial);
     }
   }, [files]);
 
   const toggleFile = (fileId: string) => {
     setSelectedFileIds((prev) =>
-      prev.includes(fileId) ? prev.filter((id) => id !== fileId) : [...prev, fileId]
+      prev.includes(fileId) ? prev.filter((id) => id !== fileId) : [...prev, fileId],
     );
+  };
+
+  const selectTop5 = () => {
+    const codeFiles = files.filter((f) =>
+      /\.(ts|tsx|js|jsx|py|go|java|c|cpp|rs)$/i.test(f.name),
+    );
+    const initial = (codeFiles.length > 0 ? codeFiles : files).slice(0, 5).map((f) => f.id);
+    setSelectedFileIds(initial);
   };
 
   const toggleAll = () => {
@@ -103,44 +122,70 @@ export function ReviewTab({
           <label className="block text-[11px] font-mono text-zinc-400 uppercase tracking-wider mb-2">
             Analysis Template
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => setTemplate('security')}
-              className={`flex flex-col items-center justify-center p-2.5 rounded border transition-all ${
+              className={`flex flex-col items-center justify-center p-2 rounded border transition-all ${
                 template === 'security'
                   ? 'border-red-500/80 bg-red-500/10 text-red-300 font-semibold'
                   : 'border-zinc-800 bg-[#09090b] text-zinc-400 hover:text-zinc-200'
               }`}
             >
-              <ShieldAlert className="h-4 w-4 mb-1 text-red-400" />
-              <span className="font-mono">Security</span>
+              <ShieldAlert className="h-3.5 w-3.5 mb-1 text-red-400" />
+              <span className="font-mono text-[11px]">Security</span>
             </button>
 
             <button
               type="button"
               onClick={() => setTemplate('performance')}
-              className={`flex flex-col items-center justify-center p-2.5 rounded border transition-all ${
+              className={`flex flex-col items-center justify-center p-2 rounded border transition-all ${
                 template === 'performance'
                   ? 'border-orange-500/80 bg-orange-500/10 text-orange-300 font-semibold'
                   : 'border-zinc-800 bg-[#09090b] text-zinc-400 hover:text-zinc-200'
               }`}
             >
-              <Zap className="h-4 w-4 mb-1 text-orange-400" />
-              <span className="font-mono">Performance</span>
+              <Zap className="h-3.5 w-3.5 mb-1 text-orange-400" />
+              <span className="font-mono text-[11px]">Performance</span>
             </button>
 
             <button
               type="button"
               onClick={() => setTemplate('code-quality')}
-              className={`flex flex-col items-center justify-center p-2.5 rounded border transition-all ${
+              className={`flex flex-col items-center justify-center p-2 rounded border transition-all ${
                 template === 'code-quality'
-                  ? 'border-zinc-400 bg-zinc-800 text-white font-semibold'
+                  ? 'border-zinc-300 bg-zinc-800 text-white font-semibold'
                   : 'border-zinc-800 bg-[#09090b] text-zinc-400 hover:text-zinc-200'
               }`}
             >
-              <CheckCircle2 className="h-4 w-4 mb-1 text-zinc-300" />
-              <span className="font-mono">Quality</span>
+              <CheckCircle2 className="h-3.5 w-3.5 mb-1 text-zinc-300" />
+              <span className="font-mono text-[11px]">Quality</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTemplate('architecture')}
+              className={`flex flex-col items-center justify-center p-2 rounded border transition-all ${
+                template === 'architecture'
+                  ? 'border-cyan-500/80 bg-cyan-500/10 text-cyan-300 font-semibold'
+                  : 'border-zinc-800 bg-[#09090b] text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              <Network className="h-3.5 w-3.5 mb-1 text-cyan-400" />
+              <span className="font-mono text-[11px]">Architecture</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTemplate('test-generator')}
+              className={`flex flex-col items-center justify-center p-2 rounded border transition-all col-span-2 sm:col-span-1 ${
+                template === 'test-generator'
+                  ? 'border-emerald-500/80 bg-emerald-500/10 text-emerald-300 font-semibold'
+                  : 'border-zinc-800 bg-[#09090b] text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              <FlaskConical className="h-3.5 w-3.5 mb-1 text-emerald-400" />
+              <span className="font-mono text-[11px]">Test Generator</span>
             </button>
           </div>
         </div>
@@ -163,16 +208,26 @@ export function ReviewTab({
 
           {showFilePicker && (
             <div className="mt-2 rounded border border-zinc-800 bg-[#09090b] p-2 space-y-1 max-h-44 overflow-y-auto font-mono text-[11px]">
-              <div
-                onClick={toggleAll}
-                className="flex items-center space-x-2 p-1.5 rounded hover:bg-zinc-800/60 cursor-pointer font-medium text-zinc-200 pb-1.5 border-b border-zinc-800"
-              >
-                {selectedFileIds.length === files.length ? (
-                  <CheckSquare className="h-3.5 w-3.5 text-zinc-200" />
-                ) : (
-                  <Square className="h-3.5 w-3.5 text-zinc-600" />
-                )}
-                <span>Select All Files</span>
+              <div className="flex items-center justify-between p-1.5 pb-2 border-b border-zinc-800 text-[10px]">
+                <div
+                  onClick={toggleAll}
+                  className="flex items-center space-x-1.5 hover:text-white cursor-pointer font-medium text-zinc-300"
+                >
+                  {selectedFileIds.length === files.length ? (
+                    <CheckSquare className="h-3.5 w-3.5 text-zinc-200" />
+                  ) : (
+                    <Square className="h-3.5 w-3.5 text-zinc-600" />
+                  )}
+                  <span>All ({files.length})</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={selectTop5}
+                  className="px-2 py-0.5 rounded border border-zinc-700 bg-zinc-800 text-zinc-200 hover:bg-zinc-700 transition-colors"
+                >
+                  Top 5 Code Files
+                </button>
               </div>
 
               {files.map((f) => {
@@ -195,6 +250,31 @@ export function ReviewTab({
             </div>
           )}
         </div>
+
+        {/* Error Banner */}
+        {reviewError && (
+          <div className="rounded-lg border border-red-500/30 bg-red-950/30 p-3 text-red-200 flex items-start justify-between space-x-2 animate-in fade-in duration-200">
+            <div className="flex items-start space-x-2">
+              <AlertTriangle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-xs text-red-200 font-mono">Review Failed</p>
+                <p className="text-[11px] text-red-300/90 leading-relaxed font-sans mt-0.5">
+                  {reviewError}
+                </p>
+              </div>
+            </div>
+            {onClearError && (
+              <button
+                type="button"
+                onClick={onClearError}
+                className="text-zinc-400 hover:text-zinc-200 p-0.5 rounded transition-colors"
+                title="Dismiss"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Run Button */}
         <button
